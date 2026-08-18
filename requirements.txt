@@ -1,0 +1,16 @@
+# Core data + classical ML (Steps 1-3)
+numpy>=1.24
+pandas>=2.0
+scipy>=1.10
+scikit-learn>=1.3
+requests>=2.31
+
+# Plotting
+matplotlib>=3.7
+seaborn>=0.12
+
+# Notebooks
+jupyter>=1.0
+
+# Deep learning track (Step 4) — uncomment when you reach it
+# torch>=2.0

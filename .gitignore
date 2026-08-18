@@ -1,0 +1,18 @@
+# Dataset — downloaded on demand, never committed (59 MB)
+data/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+
+# Keep results/ tracked, but ignore stray large files
+*.log
