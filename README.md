@@ -136,6 +136,11 @@ X_train, y_train, subjects_train = load_features("train")   # (7352, 561)
 X_raw,   y_raw,   subjects_raw   = load_raw_signals("train") # (7352, 128, 9)
 ```
 
+## Full write-up
+
+A standalone report walking through the motivation, method, and every finding in
+plain language is in [`report/findings.md`](report/findings.md).
+
 ## Status
 
 - [x] Step 1: data foundation (loader, both representations, verified split)
