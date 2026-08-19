@@ -12,5 +12,5 @@ seaborn>=0.12
 # Notebooks
 jupyter>=1.0
 
-# Deep learning track (Step 4) — uncomment when you reach it
-# torch>=2.0
+# Deep learning track (Step 4) — CPU build is fine
+torch>=2.0

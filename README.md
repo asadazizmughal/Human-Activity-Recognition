@@ -56,7 +56,6 @@ Two tracks, and the comparison between them is the finding.
 **Deep learning on raw signal windows**
 - 1D CNN
 - BiLSTM
-- (optional) CNN-LSTM hybrid
 
 Evaluation leads with macro-F1 (the classes are imbalanced), alongside accuracy,
 per-class precision and recall, and a confusion matrix.
@@ -71,19 +70,28 @@ subjects (none seen during training). Sorted by macro-F1.
 | Logistic Regression | 0.955    | 0.955    | ~2 s     |
 | SVM (RBF)           | 0.955    | 0.954    | ~2 s     |
 | Gradient Boosting   | 0.933    | 0.933    | ~34 s    |
+| 1D CNN              | 0.924    | 0.925    | ~1 min   |
 | Random Forest       | 0.926    | 0.924    | ~34 s    |
-| 1D CNN              | –        | –        | –        |
-| BiLSTM              | –        | –        | –        |
+| BiLSTM              | 0.897    | 0.898    | ~2 min   |
 
 On this dataset the linear model is both the most accurate and the fastest: the
 561 features were engineered to make the activities close to linearly separable,
-so the heavier models add nothing. The one consistent error, across every model,
-is **sitting vs standing** — and it is asymmetric, sitting predicted as standing
-far more often than the reverse. That error is not a bug to tune away; it follows
-directly from the physics (the two postures differ only by a subtle orientation
-cue) and it is only visible *because* the evaluation is subject-independent.
+so the heavier models add nothing. The deep models, trained on the **raw** signals
+with no hand-engineered features, are competitive with the tree ensembles but beat
+none of the classical models — with this little data, learning features from
+scratch has no headroom over features designed for the task, and costs far more
+compute. (Deep-learning numbers vary by a point or two across runs and hardware.)
 
-![Confusion matrix](results/confusion_matrices/best_model.png)
+The one consistent error, across **every** model, is **sitting vs standing**. It
+follows directly from the physics — the two postures differ only by a subtle
+orientation cue — and it is only visible *because* the evaluation is
+subject-independent. Two entirely different model families agreeing on what is
+hard is strong evidence the ceiling is set by the data, not the model.
+
+Classical best (Logistic Regression) vs deep best (1D CNN):
+
+![Classical confusion matrix](results/confusion_matrices/best_model.png)
+![Deep confusion matrix](results/confusion_matrices/best_deep_model.png)
 
 ## Repository layout
 
@@ -96,12 +104,13 @@ har-accelerometer/
 │   ├── data_loader.py       # download + load features and raw signals
 │   ├── features.py          # custom feature extraction from raw signals
 │   ├── models.py            # classical model definitions
-│   └── evaluate.py          # metrics + confusion matrix plotting
+│   ├── evaluate.py          # metrics + confusion matrix plotting
+│   └── deep_models.py       # 1D CNN, BiLSTM, training loop (PyTorch)
 ├── notebooks/
 │   ├── 01_eda.ipynb                 # class balance, signals, PCA
 │   ├── 02_feature_engineering.ipynb # custom features vs the official 561
 │   ├── 03_classical_models.ipynb    # four-model comparison + confusion matrix
-│   └── 04_deep_learning.ipynb       # (Step 4)
+│   └── 04_deep_learning.ipynb       # 1D CNN and BiLSTM on raw signals
 ├── results/
 │   └── confusion_matrices/
 └── report/
@@ -134,5 +143,6 @@ X_raw,   y_raw,   subjects_raw   = load_raw_signals("train") # (7352, 128, 9)
   ~0.6% accuracy of the official 561 on unseen subjects)
 - [x] Step 3: classical models and evaluation (four models; best macro-F1 0.955;
   sitting/standing confusion confirmed)
-- [ ] Step 4: deep learning track
+- [x] Step 4: deep learning track (1D CNN and BiLSTM on raw signals; competitive
+  with classical, same sitting/standing error — evidence the limit is the data)
 - [ ] Step 5: findings write-up and README polish
